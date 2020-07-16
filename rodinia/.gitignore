@@ -1,3 +1,4 @@
 data/*
 
 backprop/backprop
+backprop_opt/backprop
