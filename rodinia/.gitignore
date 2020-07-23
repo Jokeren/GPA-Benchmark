@@ -6,3 +6,5 @@ bfs/bfs
 bfs_opt/bfs
 dwt2d/dwt2d
 dwt2d_opt/dwt2d
+cfd/euler3d
+cfd_opt/euler3d
