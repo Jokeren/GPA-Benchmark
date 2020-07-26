@@ -12,4 +12,4 @@ Benchmark applications for GPU Performance Advisor
 |    rodinia/bfs   |        |   Loop Unrolling   |  568.0us |  522.0us  |  1.08x  |       1.11x      |   3%  |       |
 |  rodinia/b+tree  |        |    Code Reorder    |  53.2us  |   46.4us  |  1.15x  |       1.31x      |  14%  |       |
 |    rodinia/cfd   |        |  Function Inlining |  187.5ms |  128.3ms  |  1.46x  |       1.37x      |   6%  |       |
-
+| rodinia/gaussian |        |   Thread Increase  |  116.7ms |   30.2ms  |  3.86x  |       3.33x      |  14%  |       |
