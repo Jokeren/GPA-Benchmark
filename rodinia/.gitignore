@@ -10,3 +10,5 @@ cfd/euler3d
 cfd_opt/euler3d
 gaussian/gaussian
 gaussian_opt/gaussian
+heartwall/heartwall
+heartwall_opt/heartwall
