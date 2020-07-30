@@ -16,3 +16,5 @@ hotspot/hotspot
 hotspot_opt/hotspot
 huffman/huffman
 huffman_opt/huffman
+kmeans/kmeans
+kmeans/kmeans_opt
