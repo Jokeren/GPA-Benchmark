@@ -20,3 +20,5 @@ kmeans/kmeans
 kmeans/kmeans_opt
 lavaMD/lavaMD
 lavaMD/lavaMD_opt
+lud/cuda/lud_cuda
+lud_opt/cuda/lud_cuda
