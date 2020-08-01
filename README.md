@@ -17,4 +17,6 @@ Benchmark applications for GPU Performance Advisor
 |  rodinia/hotspot  |        | Strength Reduction |  15.4us  |   13.4us  |  1.15x  |       1.17x      |   2%  |       |
 |  rodinia/huffman  |        |    Warp Balance    |  133.2us |  121.5us  |  1.10x  |       1.22x      |   9%  |       |
 |   rodinia/kmeans  |        |   Loop Unrolling   |  787.1us |  700.7us  |  1.12x  |       1.21x      |   8%  |       |
-|   rodinia/lavaMD  |        |   Loop Unrolling   |  3.96ms  |   3.56ms  |  1.11x  |       1.12x      |   1%  |       |
+|   rodinia/lavaMD  |        |   Loop Unrolling   |   4.0ms  |   3.6ms   |  1.11x  |       1.12x      |   1%  |       |
+|    rodinia/lud    |        |    Code Reorder    |  221.8us |  162.9us  |  1.36x  |       1.58x      |  16%  |       |
+|  rodinia/myocyte  |        |  Function Inlining |  328.5ms |  274.7ms  |  1.20x  |       1.19x      |   1%  |       |
