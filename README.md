@@ -19,4 +19,5 @@ Benchmark applications for GPU Performance Advisor
 |   rodinia/kmeans  |        |   Loop Unrolling   |  787.1us |  700.7us  |  1.12x  |       1.21x      |   8%  |       |
 |   rodinia/lavaMD  |        |   Loop Unrolling   |   4.0ms  |   3.6ms   |  1.11x  |       1.12x      |   1%  |       |
 |    rodinia/lud    |        |    Code Reorder    |  221.8us |  162.9us  |  1.36x  |       1.58x      |  16%  |       |
-|  rodinia/myocyte  |        |  Function Inlining |  328.5ms |  274.7ms  |  1.20x  |       1.19x      |   1%  |       |
+|  rodinia/myocyte  |        |  Function Inlining |  308.5ms |  259.6ms  |  1.19x  |       1.19x      |   0%  |       |
+|  rodinia/myocyte  |        |  Function Spliting |  259.6ms |  254.4ms  |  1.02x  |       1.03x      |   1%  |       |
