@@ -26,3 +26,5 @@ myocyte/myocyte.out
 myocyte_opt/myocyte.out
 particlefilter/particlefilter
 particlefilter_opt/particlefilter
+streamcluster/streamcluster
+streamcluster_opt/streamcluster
