@@ -22,3 +22,7 @@ lavaMD/lavaMD
 lavaMD/lavaMD_opt
 lud/cuda/lud_cuda
 lud_opt/cuda/lud_cuda
+myocyte/myocyte.out
+myocyte_opt/myocyte.out
+particlefilter/particlefilter
+particlefilter_opt/particlefilter
