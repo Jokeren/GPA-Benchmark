@@ -30,3 +30,7 @@ streamcluster/streamcluster
 streamcluster_opt/streamcluster
 pathfinder/pathfinder
 pathfinder_opt/pathfinder
+srad/srad_v1/srad
+srad_opt/srad_v1/srad
+nw/needle
+nw_opt/needle
