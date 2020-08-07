@@ -1,0 +1,3 @@
+[submodule "Quicksilver"]
+	path = Quicksilver
+	url = git@github.com:Jokeren/Quicksilver.git
