@@ -26,3 +26,5 @@ Benchmark applications for GPU Performance Advisor
 |  rodinia/streamcluster 	|        	|   Block Increase   	|  21.5ms  	|   14.1ms  	|  1.52x  	|       1.51x      	|   1%  	|       	|
 |     rodinia/sradv1     	|        	|    Warp Balance    	|  2.01ms  	|   1.95ms  	|  1.03x  	|       1.03x      	|   0%  	|       	|
 |   rodinia/pathfinder   	|        	|    Code Reorder    	|  93.4us  	|   88.6us  	|  1.05x  	|       1.23x      	|  17%  	|       	|
+|       quicksilver      	|        	|  Function Inlining 	|   1.18s  	|   1.05s   	|  1.12x  	|       1.18x      	|   5%  	|       	|
+|       quicksilver      	|        	|   Register Reuse   	|   1.05s  	|   1.02s   	|  1.03x  	|       1.03x      	|   0%  	|       	|
