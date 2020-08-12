@@ -2,6 +2,7 @@
 //	MAIN FUNCTION
 //=====================================================================
 __device__ void __attribute__ ((noinline))
+//__device__ void
 kernel_cam_2(	fp timeinst,
   fp* d_initvalu,
   fp *d_finavalu,
