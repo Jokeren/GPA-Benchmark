@@ -19,44 +19,42 @@ int* result;
 #define M_SEED 9
 int pyramid_height;
 
-//#define BENCH_PRINT
+//#define BENCH_PRINT
 
 void
 init(int argc, char** argv)
 {
-	if(argc==4){
-		cols = atoi(argv[1]);
-		rows = atoi(argv[2]);
+	if(argc==4){
+		cols = atoi(argv[1]);
+		rows = atoi(argv[2]);
                 pyramid_height=atoi(argv[3]);
 	}else{
                 printf("Usage: dynproc row_len col_len pyramid_height\n");
                 exit(0);
         }
-	data = new int[rows*cols];
-	wall = new int*[rows];
-	for(int n=0; n<rows; n++)
-		wall[n]=data+cols*n;
-	result = new int[cols];
-	
-	int seed = M_SEED;
-	srand(seed);
-
-	for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < cols; j++)
-        {
-            wall[i][j] = rand() % 10;
-        }
-    }
-#ifdef BENCH_PRINT
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < cols; j++)
-        {
-            printf("%d ",wall[i][j]) ;
-        }
-        printf("\n") ;
-    }
+	data = new int[rows*cols];
+	wall = new int*[rows];
+	for(int n=0; n<rows; n++)
+		wall[n]=data+cols*n;
+	result = new int[cols];
+	int seed = M_SEED;
+	srand(seed);
+	for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            wall[i][j] = rand() % 10;
+        }
+    }
+#ifdef BENCH_PRINT
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            printf("%d ",wall[i][j]) ;
+        }
+        printf("\n") ;
+    }
 #endif
 }
 
