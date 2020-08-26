@@ -1,3 +1,6 @@
 [submodule "Quicksilver"]
 	path = Quicksilver
 	url = git@github.com:Jokeren/Quicksilver.git
+[submodule "PeleC"]
+	path = PeleC
+	url = git@github.com:Jokeren/PeleC.git
