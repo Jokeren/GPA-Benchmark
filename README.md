@@ -30,3 +30,5 @@ Benchmark applications for GPU Performance Advisor
 |       Quicksilver      	|     CycleTrackingKernel    	|        Register Reuse        	|   1.05s  	|   1.02s   	|  1.03x  	|       1.04x      	|   1%  	|
 |        ExaTENSOR       	|      tensor_transpose      	|      Strength Reduction      	|  5.46ms  	|   5.08ms  	|  1.07x  	|       1.06x      	|   1%  	|
 |        ExaTENSOR       	|      tensor_transpose      	| Memory Transaction Reduction 	|  5.08ms  	|   4.91ms  	|  1.03x  	|       1.05x      	|   2%  	|
+|        PeleC            | react_stateEddbPNS_8MultiFab|         Block Increase        |  440.12ms |   370.34ms  |  1.19x    |       1.23x       |   3%    |
+ 
