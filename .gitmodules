@@ -4,3 +4,6 @@
 [submodule "PeleC"]
 	path = PeleC
 	url = git@github.com:Jokeren/PeleC.git
+[submodule "gpa-minimod-artifacts"]
+	path = gpa-minimod-artifacts
+	url = git@github.com:rsrice/gpa-minimod-artifacts.git
