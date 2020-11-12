@@ -271,7 +271,6 @@ __global__ void kernel(){
       #pragma unroll 8
 			for(ja=ja1; ja<=ja2; ja++){
 				jb = jp1 - ja;
-        #pragma unroll 4
 				for(ia=ia1; ia<=ia2; ia++){
 					ib = ip1 - ia;
 					s = s + d_in_mod_temp[d_common.in_rows*(ja-1)+ia-1] * d_unique[bx].d_in2[d_common.in2_rows*(jb-1)+ib-1];
