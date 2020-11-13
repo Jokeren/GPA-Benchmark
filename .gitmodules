@@ -1,9 +1,9 @@
 [submodule "Quicksilver"]
 	path = Quicksilver
-	url = git@github.com:Jokeren/Quicksilver.git
+	url = https://github.com/Jokeren/Quicksilver.git
 [submodule "PeleC"]
 	path = PeleC
-	url = git@github.com:Jokeren/PeleC.git
+	url = https://github.com/Jokeren/PeleC.git
 [submodule "gpa-minimod-artifacts"]
 	path = gpa-minimod-artifacts
-	url = git@github.com:rsrice/gpa-minimod-artifacts.git
+	url = https://github.com/rsrice/gpa-minimod-artifacts.git
