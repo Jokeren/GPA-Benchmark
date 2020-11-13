@@ -168,7 +168,7 @@ int work_2(	int xmax,
 
 	for(i=0; i<workload; i++){
 		pointer = i*((xmax+1)*EQUATIONS) + 0*(EQUATIONS);
-		read("../data/myocyte/y.txt",
+		read("../../data/myocyte/y.txt",
 					&y[pointer],
 					91,
 					1,
@@ -182,7 +182,7 @@ int work_2(	int xmax,
 
 	for(i=0; i<workload; i++){
 		pointer = i*PARAMETERS;
-		read("../data/myocyte/params.txt",
+		read("../../data/myocyte/params.txt",
 					&params[pointer],
 					18,
 					1,
