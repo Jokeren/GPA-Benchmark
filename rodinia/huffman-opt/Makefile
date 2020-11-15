@@ -3,7 +3,7 @@ CC = g++
 
 CUDA_INCLUDEPATH=/usr/local/cuda/include
 
-NVCC_OPTS=-O3 -lineinfo -Xcompiler -m64 -g -arch=sm_70
+NVCC_OPTS=-O3 -lineinfo -Xcompiler -m64 -g
 
 GCC_OPTS=-O3 -Wall -Wextra -m64
 
