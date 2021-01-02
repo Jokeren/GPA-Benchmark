@@ -18,7 +18,7 @@ OMP_FLAG = -fopenmp
 
 CUD_C = $(CUDA_DIR)/bin/nvcc
 # OMP_FLAG = 	-Xcompiler paste_one_here
-CUDA_FLAG = -lineinfo -arch=sm_70
+CUDA_FLAG = -lineinfo
 
 # link objects (binaries) together
 a.out:		main.o \
@@ -89,4 +89,5 @@ clean:
 		./util/num/*.o \
 		./util/timer/*.o \
 		./util/device/*.o \
-		lavaMD
+		lavaMD \
+	  *.sqlite *.qdrep
