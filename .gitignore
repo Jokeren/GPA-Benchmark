@@ -1,1 +1,6 @@
 *.o
+*.hpcstruct
+gpa-database
+gpa-measurements
+gpa-database-*
+gpa.log

@@ -41,4 +41,4 @@ main_test_cu.o: main_test_cu.cu cutil.h
 	$(CC) ++ $(GCC_OPTS) -c $@ -o $<
 
 clean:
-	rm -f *.o $(EXE) 
+	rm -f *.o $(EXE) *.qdrep *.sqlite

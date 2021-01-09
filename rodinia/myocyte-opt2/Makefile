@@ -40,4 +40,4 @@ main.o:	define.c \
 
 # delete all object files
 clean:
-	rm *.o *.out output.txt
+	rm *.o *.out output.txt *.qdrep *.sqlite

@@ -4,4 +4,4 @@ lud_cuda:
 	cd cuda; make
 
 clean:
-	cd cuda; make clean
+	cd cuda; make clean; rm -rf *.sqlite *.qdrep

@@ -41,4 +41,4 @@ $(EXECUTABLE) : $(OBJS)
 	$(NVCC) $(NVCCFLAGS) -o $@  $?
 
 clean:
-	rm -f $(EXECUTABLE) $(OBJS) *.linkinfo
+	rm -f $(EXECUTABLE) $(OBJS) *.linkinfo *.sqlite *.qdrep

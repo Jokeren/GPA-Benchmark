@@ -30,5 +30,5 @@ $(TARGET_G): streamcluster_cuda_cpu.cpp streamcluster_cuda.cu streamcluster_head
 	
 
 clean:
-	rm -f *.o *~ *.txt $(TARGET_G) *.linkinfo
+	rm -f *.o *~ *.txt $(TARGET_G) *.linkinfo *.sqlite *.qdrep 
 	

@@ -7,6 +7,7 @@ DEFS += \
 
 NVCCFLAGS += -I../common \
 			 -O3 \
+			 -arch sm_80 \
 			 -use_fast_math \
 			 -lineinfo \
 			 -lm \
@@ -41,4 +42,4 @@ $(EXECUTABLE) : $(OBJS)
 	$(NVCC) $(NVCCFLAGS) -o $@  $?
 
 clean:
-	rm -f $(EXECUTABLE) $(OBJS) *.linkinfo
+	rm -f $(EXECUTABLE) $(OBJS) *.linkinfo *.sqlite *.qdrep

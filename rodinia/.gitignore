@@ -34,3 +34,5 @@ srad/srad_v1/srad
 srad_opt/srad_v1/srad
 nw/needle
 nw_opt/needle
+
+*.hpcstruct
