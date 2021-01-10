@@ -7,7 +7,6 @@ DEFS += \
 
 NVCCFLAGS += -I../common \
 			 -O3 \
-			 -arch sm_80 \
 			 -use_fast_math \
 			 -lineinfo \
 			 -lm \
