@@ -18,7 +18,7 @@ cudaMemcpyToSymbol(d_stride_output_global, stride_output_global, dim_output * si
 
 #if defined CUDA6
 cudaFuncSetAttribute(tensor_transpose<3, 3>, cudaFuncAttributeMaxDynamicSharedMemorySize, 2 * TILE_SIZE * sizeof(double));
-#else
+#elif defined CUDA5
 cudaFuncSetAttribute(tensor_transpose, cudaFuncAttributeMaxDynamicSharedMemorySize, 2 * TILE_SIZE * sizeof(double));
 #endif
 
@@ -54,7 +54,9 @@ cudaEventCreate(&event_end);
 
 cudaEventRecord(event_start);
 for (size_t i = 0; i < ITER; ++i) {
-#if defined CUDA4 || defined CUDA5
+#if defined CUDA4
+tensor_transpose<<<nblocks, NTHREADS>>>(dim_input, dim_output, nblocks, tile_size, device_input, device_output);
+#elif defined CUDA5
 tensor_transpose<<<nblocks, NTHREADS, 2 * (TILE_SIZE) * sizeof(double)>>>(dim_input, dim_output, nblocks, tile_size,
                                         device_input, device_output);
 #elif defined CUDA6
