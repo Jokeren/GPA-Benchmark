@@ -4,13 +4,9 @@
 
 using namespace nvcuda::experimental;
 
-
-#define TILE_SIZE 5900
-#define NTHREADS 512
-
+template<int dim_input, int dim_output>
 __global__
-void tensor_transpose(int dim_input, int dim_output, int nblocks, int tile_size,
-  double *input, double *output) {
+void tensor_transpose(int nblocks, int tile_size, double *input, double *output) {
   pipeline pipe;
   extern __shared__ double tile[];
   int block_idx = blockIdx.x;

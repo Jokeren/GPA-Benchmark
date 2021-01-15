@@ -4,7 +4,7 @@ const int dim_output = 3;
 const int dim_input = 3;
 double *device_output, *device_input;
 
-#if defined CUDA4 || defined CUDA5
+#if defined CUDA4 || defined CUDA5 || defined CUDA6
 cudaMalloc(&device_output, data_size * sizeof(double));
 cudaMalloc(&device_input, data_size * sizeof(double));
 cudaMemcpy(device_input, input, data_size * sizeof(double), cudaMemcpyHostToDevice );
@@ -15,6 +15,12 @@ cudaMemcpyToSymbol(d_shape_output_r, shape_output_r, dim_output * sizeof(float))
 cudaMemcpyToSymbol(d_stride_input, stride_input, dim_input * sizeof(int));
 cudaMemcpyToSymbol(d_stride_output_local, stride_output_local, dim_output * sizeof(int));
 cudaMemcpyToSymbol(d_stride_output_global, stride_output_global, dim_output * sizeof(int));
+
+#if defined CUDA6
+cudaFuncSetAttribute(tensor_transpose<3, 3>, cudaFuncAttributeMaxDynamicSharedMemorySize, 2 * TILE_SIZE * sizeof(double));
+#else
+cudaFuncSetAttribute(tensor_transpose, cudaFuncAttributeMaxDynamicSharedMemorySize, 2 * TILE_SIZE * sizeof(double));
+#endif
 
 #else
 int *device_shape_input, *device_shape_output;
@@ -48,12 +54,11 @@ cudaEventCreate(&event_end);
 
 cudaEventRecord(event_start);
 for (size_t i = 0; i < ITER; ++i) {
-#if defined CUDA4
-tensor_transpose<<<nblocks, NTHREADS>>>(dim_input, dim_output, nblocks, tile_size,
+#if defined CUDA4 || defined CUDA5
+tensor_transpose<<<nblocks, NTHREADS, 2 * (TILE_SIZE) * sizeof(double)>>>(dim_input, dim_output, nblocks, tile_size,
                                         device_input, device_output);
-#elif defined CUDA5
-tensor_transpose<dim_input, dim_output><<<nblocks, NTHREADS>>>(nblocks, tile_size,
-                                        device_input, device_output);
+#elif defined CUDA6
+tensor_transpose<3, 3><<<nblocks, NTHREADS, 2 * (TILE_SIZE) * sizeof(double)>>>(nblocks, tile_size, device_input, device_output);
 #else
 tensor_transpose<<<nblocks, NTHREADS>>>(dim_input, dim_output, nblocks, tile_size,
                                         device_shape_input, device_shape_output,
@@ -70,7 +75,7 @@ elapsed_time /= 1000.0;
 
 cudaMemcpy(output, device_output, data_size * sizeof(double), cudaMemcpyDeviceToHost);
 
-#if defined CUDA4 || defined CUDA5
+#if defined CUDA4 || defined CUDA5 || CUDA6
 cudaFree(device_output);
 cudaFree(device_input);
 #else
