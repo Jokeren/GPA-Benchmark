@@ -8,8 +8,11 @@
 	# command n
 
 # link objects(binaries) together
+include ../common/make.config
+NVCC=$(CUDA_DIR)/bin/nvcc
+
 myocyte.out:		main.o
-	nvcc	main.o \
+	$(NVCC)	main.o \
 				-I/usr/local/cuda/include \
 				-L/usr/local/cuda/lib \
 				-lm -O3 -lineinfo -lcuda -lcudart --use_fast_math \
@@ -35,7 +38,7 @@ main.o:	define.c \
 				kernel_fin_2.cu \
 				file.c \
 				timer.c
-	nvcc	main.cu -lineinfo --use_fast_math \
+	$(NVCC)	main.cu -lineinfo --use_fast_math \
 				-c -O3 -g
 
 # delete all object files

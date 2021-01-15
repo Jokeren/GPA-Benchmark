@@ -1,7 +1,9 @@
-NVCC=nvcc
+include ../common/make.config
+
+NVCC=$(CUDA_DIR)/bin/nvcc
 CC = g++
 
-CUDA_INCLUDEPATH=/usr/local/cuda/include
+CUDA_INCLUDEPATH=$(CUDA_DIR)/include
 
 NVCC_OPTS=-O3 -lineinfo -Xcompiler -m64 -g
 
