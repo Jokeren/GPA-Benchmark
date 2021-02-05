@@ -2,32 +2,28 @@
 #include <cuda.h>
 #include <cuda_pipeline.h>
 
-using namespace nvcuda::experimental;
 
 template<int dim_input, int dim_output>
 __global__
 void tensor_transpose(int nblocks, int tile_size, double *input, double *output) {
-  pipeline pipe;
   extern __shared__ double tile[];
   int block_idx = blockIdx.x;
-  int iters = 0;
   int phase = 0;
 
   for (int i = threadIdx.x; i < tile_size; i += blockDim.x) {
-    memcpy_async(tile[phase * TILE_SIZE + i], input[i + block_idx * tile_size], pipe);
+    __pipeline_memcpy_async(&tile[phase * TILE_SIZE + i], &input[i + block_idx * tile_size], sizeof(double));
   }
-  pipe.commit();
+  __pipeline_commit();
 
   for (; block_idx < nblocks; block_idx += gridDim.x) {
-    ++iters;
     int it = block_idx, im = 0, offset1 = 0;
 
     if (block_idx + gridDim.x < nblocks) {
       int p = 1 - phase;
       for (int i = threadIdx.x; i < tile_size; i += blockDim.x) {
-        memcpy_async(tile[p * TILE_SIZE + i], input[i + (block_idx + gridDim.x) * tile_size], pipe);
+        __pipeline_memcpy_async(&tile[p * TILE_SIZE + i], &input[i + (block_idx + gridDim.x) * tile_size], sizeof(double));
       }
-      pipe.commit();
+      __pipeline_commit();
     }
     
     for (int i = 0; i < dim_input; i++) {
@@ -36,7 +32,11 @@ void tensor_transpose(int nblocks, int tile_size, double *input, double *output)
       it = im;
     }
 
-    pipe.wait(iters - 1);
+    if (block_idx + gridDim.x < nblocks) {
+      __pipeline_wait_prior(1);
+    } else {
+      __pipeline_wait_prior(0);
+    }
     __syncthreads();
   
     for (int i = threadIdx.x; i < tile_size; i += blockDim.x) {
