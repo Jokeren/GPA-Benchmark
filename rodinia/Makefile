@@ -14,6 +14,7 @@ all:
 	cd huffman; make;  cd ..;\
 	cd kmeans-opt; make;  cd ..;\
 	cd lavaMD-opt; make;  cd ..;\
+	cd lud; make;  cd ..;\
 	cd lud-opt; make;  cd ..;\
 	cd myocyte-opt1; make;  cd ..;\
 	cd myocyte-opt2; make;  cd ..;\
@@ -42,6 +43,7 @@ clean:
 	cd huffman; make clean;  cd ..;\
 	cd kmeans-opt; make clean;  cd ..;\
 	cd lavaMD-opt; make clean;  cd ..;\
+	cd lud; make clean;  cd ..;\
 	cd lud-opt; make clean;  cd ..;\
 	cd myocyte-opt1; make clean;  cd ..;\
 	cd myocyte-opt2; make clean;  cd ..;\
