@@ -1,17 +1,15 @@
 //=====================================================================
 //	MAIN FUNCTION
 //=====================================================================
-__device__ void __attribute__ ((noinline))
-//__device__ void
-kernel_cam_2(	fp timeinst,
-  fp* d_initvalu,
-  fp *d_finavalu,
-  int valu_offset,
-  fp* d_params,
-  int params_offset,
-  fp* d_com,
-  int com_offset,
-  fp Ca){
+__device__ void kernel_cam_2(	fp timeinst,
+													fp* d_initvalu,
+													fp *d_finavalu,
+													int valu_offset,
+													fp* d_params,
+													int params_offset,
+													fp* d_com,
+													int com_offset,
+													fp Ca){
 
 	//=====================================================================
 	//	VARIABLES

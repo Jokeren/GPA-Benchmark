@@ -124,13 +124,16 @@ __device__ void kernel_2(	int timeinst,
 	//====================================================================================================
 	//		make sure function does not return NANs and INFs
 	//====================================================================================================
+	int bx = blockIdx.x;
+	int tx = threadIdx.x;
+	int tid = bx*NUMBER_THREADS+tx;
 
 	for(i=0; i<EQUATIONS; i++){
-		if (isnan(finavalu[i]) == 1){ 
-			finavalu[i] = 0.0001;												// for NAN set rate of change to 0.0001
+		if (isnan(finavalu[128 * i + tid]) == 1){ 
+			finavalu[128 * i + tid] = 0.0001;												// for NAN set rate of change to 0.0001
 		}
-		else if (isinf(finavalu[i]) == 1){ 
-			finavalu[i] = 0.0001;												// for INF set rate of change to 0.0001
+		else if (isinf(finavalu[128 * i + tid]) == 1){ 
+			finavalu[128 * i + tid] = 0.0001;												// for INF set rate of change to 0.0001
 		}
 	}
 

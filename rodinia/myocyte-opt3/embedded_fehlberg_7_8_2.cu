@@ -20,8 +20,8 @@
 //     The next step size is then calculated using the preassigned tolerance  //
 //     and error estimate.                                                    //
 //     For step i+1,                                                          //
-//        y[i+1] = y[i] +  h * (41/840 * k1 + 34/105 * finavalu_temp[5] + 9/35 * finavalu_temp[6]         //
-//                        + 9/35 * finavalu_temp[7] + 9/280 * finavalu_temp[8] + 9/280 finavalu_temp[9] + 41/840 finavalu_temp[10] ) //
+//        y[i+1] = y[i] +  h * (41/840 * k1 + 34/105 * finavalu_temp_index(5) + 9/35 * finavalu_temp_index(6)         //
+//                        + 9/35 * finavalu_temp_index(7) + 9/280 * finavalu_temp[8] + 9/280 finavalu_temp[9] + 41/840 finavalu_temp[10] ) //
 //     where                                                                  //
 //     k1 = f( x[i],y[i] ),                                                   //
 //     finavalu_temp[1] = f( x[i]+2h/27, y[i] + 2h*k1/27),                                  //
@@ -85,21 +85,26 @@
 //===============================================================================================================================================================================================================
 //===============================================================================================================================================================================================================
 
-__device__ void
-embedded_fehlberg_7_8_2(	fp h,
-  fp timeinst,
-  fp* initvalu,
-  fp* finavalu,
-  fp* parameter,
+#define finavalu_temp_index(x) finavalu_temp[128 * (x) + tid]
 
-  fp* error,
-  fp* initvalu_temp,
-  fp* finavalu_temp,
-  fp* com) {
+__device__ void embedded_fehlberg_7_8_2(	fp h,
+
+																			fp timeinst,
+																			fp* initvalu,
+																			fp* finavalu,
+																			fp* parameter,
+
+																			fp* error,
+																			fp* initvalu_temp,
+																			fp* finavalu_temp,
+																			fp* com) {
 
 	//======================================================================================================================================================
 	//	VARIABLES
 	//======================================================================================================================================================
+	int bx = blockIdx.x;																// get current horizontal block index (0-n)
+	int tx = threadIdx.x;																// get current horizontal thread index (0-n)
+	int tid = bx*NUMBER_THREADS+tx;
 
 	const fp c_1_11 = 41.0 / 840.0;
 	const fp c6 = 34.0 / 105.0;
@@ -205,7 +210,7 @@ embedded_fehlberg_7_8_2(	fp h,
 
 			timeinst_temp = timeinst+h2_7;
 			for(i=0; i<EQUATIONS; i++){
-				initvalu_temp[i] = initvalu[i] + h2_7 * (finavalu_temp[0*EQUATIONS+i]);
+				initvalu_temp[i] = initvalu[i] + h2_7 * finavalu_temp_index(0*EQUATIONS+i);
 			}
 
 		}
@@ -218,7 +223,7 @@ embedded_fehlberg_7_8_2(	fp h,
 
 			timeinst_temp = timeinst+a3*h;
 			for(i=0; i<EQUATIONS; i++){
-				initvalu_temp[i] = initvalu[i] + h * ( b31*finavalu_temp[0*EQUATIONS+i] + b32*finavalu_temp[1*EQUATIONS+i]);
+				initvalu_temp[i] = initvalu[i] + h * ( b31*finavalu_temp_index(0*EQUATIONS+i) + b32*finavalu_temp_index(1*EQUATIONS+i));
 			}
 
 		}
@@ -231,7 +236,7 @@ embedded_fehlberg_7_8_2(	fp h,
 
 			timeinst_temp = timeinst+a4*h;
 			for(i=0; i<EQUATIONS; i++){
-				initvalu_temp[i] = initvalu[i] + h * ( b41*finavalu_temp[0*EQUATIONS+i] + b43*finavalu_temp[2*EQUATIONS+i]) ;
+				initvalu_temp[i] = initvalu[i] + h * ( b41*finavalu_temp_index(0*EQUATIONS+i) + b43*finavalu_temp_index(2*EQUATIONS+i)) ;
 			}
 
 		}
@@ -244,7 +249,7 @@ embedded_fehlberg_7_8_2(	fp h,
 
 			timeinst_temp = timeinst+a5*h;
 			for(i=0; i<EQUATIONS; i++){
-				initvalu_temp[i] = initvalu[i] + h * ( b51*finavalu_temp[0*EQUATIONS+i] + b53*finavalu_temp[2*EQUATIONS+i] + b54*finavalu_temp[3*EQUATIONS+i]) ;
+				initvalu_temp[i] = initvalu[i] + h * ( b51*finavalu_temp_index(0*EQUATIONS+i) + b53*finavalu_temp_index(2*EQUATIONS+i) + b54*finavalu_temp_index(3*EQUATIONS+i)) ;
 			}
 
 		}
@@ -257,7 +262,7 @@ embedded_fehlberg_7_8_2(	fp h,
 
 			timeinst_temp = timeinst+a6*h;
 			for(i=0; i<EQUATIONS; i++){
-				initvalu_temp[i] = initvalu[i] + h * ( b61*finavalu_temp[0*EQUATIONS+i] + b64*finavalu_temp[3*EQUATIONS+i] + b65*finavalu_temp[4*EQUATIONS+i]) ;
+				initvalu_temp[i] = initvalu[i] + h * ( b61*finavalu_temp_index(0*EQUATIONS+i) + b64*finavalu_temp_index(3*EQUATIONS+i) + b65*finavalu_temp_index(4*EQUATIONS+i)) ;
 			}
 
 		}
@@ -270,7 +275,7 @@ embedded_fehlberg_7_8_2(	fp h,
 
 			timeinst_temp = timeinst+a7*h;
 			for(i=0; i<EQUATIONS; i++){
-				initvalu_temp[i] = initvalu[i] + h * ( b71*finavalu_temp[0*EQUATIONS+i] + b74*finavalu_temp[3*EQUATIONS+i] + b75*finavalu_temp[4*EQUATIONS+i] + b76*finavalu_temp[5*EQUATIONS+i]);
+				initvalu_temp[i] = initvalu[i] + h * ( b71*finavalu_temp_index(0*EQUATIONS+i) + b74*finavalu_temp_index(3*EQUATIONS+i) + b75*finavalu_temp_index(4*EQUATIONS+i) + b76*finavalu_temp_index(5*EQUATIONS+i));
 			}
 
 		}
@@ -283,7 +288,7 @@ embedded_fehlberg_7_8_2(	fp h,
 
 			timeinst_temp = timeinst+a8*h;
 			for(i=0; i<EQUATIONS; i++){
-				initvalu_temp[i] = initvalu[i] + h * ( b81*finavalu_temp[0*EQUATIONS+i] + b85*finavalu_temp[4*EQUATIONS+i] + b86*finavalu_temp[5*EQUATIONS+i] + b87*finavalu_temp[6*EQUATIONS+i]);
+				initvalu_temp[i] = initvalu[i] + h * ( b81*finavalu_temp_index(0*EQUATIONS+i) + b85*finavalu_temp_index(4*EQUATIONS+i) + b86*finavalu_temp_index(5*EQUATIONS+i) + b87*finavalu_temp_index(6*EQUATIONS+i));
 			}
 
 		}
@@ -296,7 +301,7 @@ embedded_fehlberg_7_8_2(	fp h,
 
 			timeinst_temp = timeinst+a9*h;
 			for(i=0; i<EQUATIONS; i++){
-				initvalu_temp[i] = initvalu[i] + h * ( b91*finavalu_temp[0*EQUATIONS+i] + b94*finavalu_temp[3*EQUATIONS+i] + b95*finavalu_temp[4*EQUATIONS+i] + b96*finavalu_temp[5*EQUATIONS+i] + b97*finavalu_temp[6*EQUATIONS+i]+ b98*finavalu_temp[7*EQUATIONS+i]) ;
+				initvalu_temp[i] = initvalu[i] + h * ( b91*finavalu_temp_index(0*EQUATIONS+i) + b94*finavalu_temp_index(3*EQUATIONS+i) + b95*finavalu_temp_index(4*EQUATIONS+i) + b96*finavalu_temp_index(5*EQUATIONS+i) + b97*finavalu_temp_index(6*EQUATIONS+i)+ b98*finavalu_temp_index(7*EQUATIONS+i)) ;
 			}
 
 		}
@@ -309,7 +314,7 @@ embedded_fehlberg_7_8_2(	fp h,
 
 			timeinst_temp = timeinst+a10*h;
 			for(i=0; i<EQUATIONS; i++){
-				initvalu_temp[i] = initvalu[i] + h * ( b10_1*finavalu_temp[0*EQUATIONS+i] + b10_4*finavalu_temp[3*EQUATIONS+i] + b10_5*finavalu_temp[4*EQUATIONS+i] + b10_6*finavalu_temp[5*EQUATIONS+i] + b10_7*finavalu_temp[6*EQUATIONS+i] + b10_8*finavalu_temp[7*EQUATIONS+i] + b10_9*finavalu_temp[8*EQUATIONS+i]) ;
+				initvalu_temp[i] = initvalu[i] + h * ( b10_1*finavalu_temp_index(0*EQUATIONS+i) + b10_4*finavalu_temp_index(3*EQUATIONS+i) + b10_5*finavalu_temp_index(4*EQUATIONS+i) + b10_6*finavalu_temp_index(5*EQUATIONS+i) + b10_7*finavalu_temp_index(6*EQUATIONS+i) + b10_8*finavalu_temp_index(7*EQUATIONS+i) + b10_9*finavalu_temp_index(8*EQUATIONS+i)) ;
 			}
 
 		}
@@ -322,7 +327,7 @@ embedded_fehlberg_7_8_2(	fp h,
 
 			timeinst_temp = timeinst+h;
 			for(i=0; i<EQUATIONS; i++){
-				initvalu_temp[i] = initvalu[i] + h * ( b11_1*finavalu_temp[0*EQUATIONS+i] + b11_4*finavalu_temp[3*EQUATIONS+i] + b11_5*finavalu_temp[4*EQUATIONS+i] + b11_6*finavalu_temp[5*EQUATIONS+i] + b11_7*finavalu_temp[6*EQUATIONS+i] + b11_8*finavalu_temp[7*EQUATIONS+i] + b11_9*finavalu_temp[8*EQUATIONS+i]+ b11_10 * finavalu_temp[9*EQUATIONS+i]);
+				initvalu_temp[i] = initvalu[i] + h * ( b11_1*finavalu_temp_index(0*EQUATIONS+i) + b11_4*finavalu_temp_index(3*EQUATIONS+i) + b11_5*finavalu_temp_index(4*EQUATIONS+i) + b11_6*finavalu_temp_index(5*EQUATIONS+i) + b11_7*finavalu_temp_index(6*EQUATIONS+i) + b11_8*finavalu_temp_index(7*EQUATIONS+i) + b11_9*finavalu_temp_index(8*EQUATIONS+i)+ b11_10 * finavalu_temp_index(9*EQUATIONS+i));
 			}
 
 		}
@@ -335,7 +340,7 @@ embedded_fehlberg_7_8_2(	fp h,
 
 			timeinst_temp = timeinst;
 			for(i=0; i<EQUATIONS; i++){
-				initvalu_temp[i] = initvalu[i] + h * ( b12_1*finavalu_temp[0*EQUATIONS+i] + b12_6*finavalu_temp[5*EQUATIONS+i] + b12_7*finavalu_temp[6*EQUATIONS+i] + b12_8*finavalu_temp[7*EQUATIONS+i] + b12_9*finavalu_temp[8*EQUATIONS+i] + b12_10 * finavalu_temp[9*EQUATIONS+i]) ;
+				initvalu_temp[i] = initvalu[i] + h * ( b12_1*finavalu_temp_index(0*EQUATIONS+i) + b12_6*finavalu_temp_index(5*EQUATIONS+i) + b12_7*finavalu_temp_index(6*EQUATIONS+i) + b12_8*finavalu_temp_index(7*EQUATIONS+i) + b12_9*finavalu_temp_index(8*EQUATIONS+i) + b12_10 * finavalu_temp_index(9*EQUATIONS+i)) ;
 			}
 
 		}
@@ -348,7 +353,7 @@ embedded_fehlberg_7_8_2(	fp h,
 
 			timeinst_temp = timeinst+h;
 			for(i=0; i<EQUATIONS; i++){
-				initvalu_temp[i] = initvalu[i] + h * ( b13_1*finavalu_temp[0*EQUATIONS+i] + b13_4*finavalu_temp[3*EQUATIONS+i] + b13_5*finavalu_temp[4*EQUATIONS+i] + b13_6*finavalu_temp[5*EQUATIONS+i] + b13_7*finavalu_temp[6*EQUATIONS+i] + b13_8*finavalu_temp[7*EQUATIONS+i] + b13_9*finavalu_temp[8*EQUATIONS+i] + b13_10*finavalu_temp[9*EQUATIONS+i] + finavalu_temp[11*EQUATIONS+i]) ;
+				initvalu_temp[i] = initvalu[i] + h * ( b13_1*finavalu_temp_index(0*EQUATIONS+i) + b13_4*finavalu_temp_index(3*EQUATIONS+i) + b13_5*finavalu_temp_index(4*EQUATIONS+i) + b13_6*finavalu_temp_index(5*EQUATIONS+i) + b13_7*finavalu_temp_index(6*EQUATIONS+i) + b13_8*finavalu_temp_index(7*EQUATIONS+i) + b13_9*finavalu_temp_index(8*EQUATIONS+i) + b13_10*finavalu_temp_index(9*EQUATIONS+i) + finavalu_temp_index(11*EQUATIONS+i)) ;
 			}
 
 		}
@@ -360,7 +365,7 @@ embedded_fehlberg_7_8_2(	fp h,
 		kernel_2(	timeinst_temp,
 							initvalu_temp,
 							parameter,
-							&finavalu_temp[j*EQUATIONS],
+							&finavalu_temp[j*EQUATIONS * 128],
 							com);
 
 	}
@@ -370,14 +375,14 @@ embedded_fehlberg_7_8_2(	fp h,
 	//======================================================================================================================================================
 
 	for(i=0; i<EQUATIONS; i++){
-		finavalu[i]= initvalu[i] +  h * (c_1_11 * (finavalu_temp[0*EQUATIONS+i] + finavalu_temp[10*EQUATIONS+i])  + c6 * finavalu_temp[5*EQUATIONS+i] + c_7_8 * (finavalu_temp[6*EQUATIONS+i] + finavalu_temp[7*EQUATIONS+i]) + c_9_10 * (finavalu_temp[8*EQUATIONS+i] + finavalu_temp[9*EQUATIONS+i]) );
-		// printf("finavalu_temp[0][%d] = %f\n", i, finavalu_temp[0][i]);
-		// printf("finavalu_temp[10][%d] = %f\n", i, finavalu_temp[10][i]);
-		// printf("finavalu_temp[5][%d] = %f\n", i, finavalu_temp[5][i]);
-		// printf("finavalu_temp[6][%d] = %f\n", i, finavalu_temp[6][i]);
-		// printf("finavalu_temp[7][%d] = %f\n", i, finavalu_temp[7][i]);
-		// printf("finavalu_temp[8][%d] = %f\n", i, finavalu_temp[8][i]);
-		// printf("finavalu_temp[9][%d] = %f\n", i, finavalu_temp[9][i]);
+		finavalu[i]= initvalu[i] +  h * (c_1_11 * (finavalu_temp_index(0*EQUATIONS+i) + finavalu_temp_index(10*EQUATIONS+i))  + c6 * finavalu_temp_index(5*EQUATIONS+i) + c_7_8 * (finavalu_temp_index(6*EQUATIONS+i) + finavalu_temp_index(7*EQUATIONS+i)) + c_9_10 * (finavalu_temp_index(8*EQUATIONS+i) + finavalu_temp_index(9*EQUATIONS+i)) );
+		// printf("finavalu_temp_index(0)[%d] = %f\n", i, finavalu_temp_index(0)[i]);
+		// printf("finavalu_temp_index(10)[%d] = %f\n", i, finavalu_temp_index(10)[i]);
+		// printf("finavalu_temp_index(5)[%d] = %f\n", i, finavalu_temp_index(5)[i]);
+		// printf("finavalu_temp_index(6)[%d] = %f\n", i, finavalu_temp_index(6)[i]);
+		// printf("finavalu_temp_index(7)[%d] = %f\n", i, finavalu_temp_index(7)[i]);
+		// printf("finavalu_temp_index(8)[%d] = %f\n", i, finavalu_temp_index(8)[i]);
+		// printf("finavalu_temp_index(9)[%d] = %f\n", i, finavalu_temp_index(9)[i]);
 		// printf("finavalu[%d] = %f\n", i, finavalu[i]);
 	}
 
@@ -386,7 +391,7 @@ embedded_fehlberg_7_8_2(	fp h,
 	//======================================================================================================================================================
 
 	for(i=0; i<EQUATIONS; i++){
-		error[i] = fabs(err_factor * (finavalu_temp[0*EQUATIONS+i] + finavalu_temp[10*EQUATIONS+i] - finavalu_temp[11*EQUATIONS+i] - finavalu_temp[12*EQUATIONS+i]));
+		error[i] = fabs(err_factor * (finavalu_temp_index(0*EQUATIONS+i) + finavalu_temp_index(10*EQUATIONS+i) - finavalu_temp_index(11*EQUATIONS+i) - finavalu_temp_index(12*EQUATIONS+i)));
 		// printf("Error[%d] = %f\n", i, error[i]);
 	}
 

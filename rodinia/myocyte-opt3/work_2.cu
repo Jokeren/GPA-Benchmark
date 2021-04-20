@@ -143,7 +143,7 @@ int work_2(	int xmax,
 	initvalu_temp_mem = workload * EQUATIONS * sizeof(fp);
 	cudaMalloc((void **)&d_initvalu_temp, initvalu_temp_mem);
 
-	finavalu_temp_mem = workload * 13* EQUATIONS * sizeof(fp);
+	finavalu_temp_mem = 128 * 13* EQUATIONS * sizeof(fp);
 	cudaMalloc((void **)&d_finavalu_temp, finavalu_temp_mem);
 
 	time2 = get_time();

@@ -1,11 +1,17 @@
 //=====================================================================
 //	MAIN FUNCTION														
 //=====================================================================
+
+#define d_finavalu_index(x) d_finavalu[128 * (x) + tid]
+
 __device__ void kernel_ecc_2(	fp timeinst,
 													fp* d_initvalu,
 													fp* d_finavalu,
 													int valu_offset,
 													fp* d_params){
+	int bx = blockIdx.x;																// get current horizontal block index (0-n)
+	int tx = threadIdx.x;																// get current horizontal thread index (0-n)
+	int tid = bx*NUMBER_THREADS+tx;
 
 	//=====================================================================
 	//	VARIABLES														
@@ -691,9 +697,9 @@ __device__ void kernel_ecc_2(	fp timeinst,
 		aj = (-127140*exp(0.2444*d_initvalu_39)-3.474e-5*exp(-0.04391*d_initvalu_39))*(d_initvalu_39+37.78)/(1+exp(0.311*(d_initvalu_39+79.23)));
 		bj = 0.1212*exp(-0.01052*d_initvalu_39)/(1+exp(-0.1378*(d_initvalu_39+40.14)));
 	}
-	d_finavalu[offset_1] = am*(1-d_initvalu_1)-bm*d_initvalu_1;
-	d_finavalu[offset_2] = ah*(1-d_initvalu_2)-bh*d_initvalu_2;
-	d_finavalu[offset_3] = aj*(1-d_initvalu_3)-bj*d_initvalu_3;
+	d_finavalu_index(offset_1) = am*(1-d_initvalu_1)-bm*d_initvalu_1;
+	d_finavalu_index(offset_2) = ah*(1-d_initvalu_2)-bh*d_initvalu_2;
+	d_finavalu_index(offset_3) = aj*(1-d_initvalu_3)-bj*d_initvalu_3;
 	I_Na_junc = Fjunc*GNa*pow(d_initvalu_1,3)*d_initvalu_2*d_initvalu_3*(d_initvalu_39-ena_junc);
 	I_Na_sl = Fsl*GNa*pow(d_initvalu_1,3)*d_initvalu_2*d_initvalu_3*(d_initvalu_39-ena_sl);
 	// I_Na = I_Na_junc+I_Na_sl;
@@ -714,7 +720,7 @@ __device__ void kernel_ecc_2(	fp timeinst,
 	gkr = 0.03*sqrt(Ko/5.4);
 	xrss = 1/(1+exp(-(d_initvalu_39+50)/7.5));
 	tauxr = 1/(0.00138*(d_initvalu_39+7)/(1-exp(-0.123*(d_initvalu_39+7)))+6.1e-4*(d_initvalu_39+10)/(exp(0.145*(d_initvalu_39+10))-1));
-	d_finavalu[offset_12] = (xrss-d_initvalu_12)/tauxr;
+	d_finavalu_index(offset_12) = (xrss-d_initvalu_12)/tauxr;
 	rkr = 1/(1+exp((d_initvalu_39+33)/22.4));
 	I_kr = gkr*d_initvalu_12*rkr*(d_initvalu_39-ek);
 
@@ -726,7 +732,7 @@ __device__ void kernel_ecc_2(	fp timeinst,
 	eks = (1/FoRT)*log((Ko+pNaK*Nao)/(d_initvalu_35+pNaK*d_initvalu_34));	
 	xsss = 1/(1+exp(-(d_initvalu_39-1.5)/16.7));
 	tauxs = 1/(7.19e-5*(d_initvalu_39+30)/(1-exp(-0.148*(d_initvalu_39+30)))+1.31e-4*(d_initvalu_39+30)/(exp(0.0687*(d_initvalu_39+30))-1)); 
-	d_finavalu[offset_13] = (xsss-d_initvalu_13)/tauxs;
+	d_finavalu_index(offset_13) = (xsss-d_initvalu_13)/tauxs;
 	I_ks_junc = Fjunc*gks_junc*pow(d_initvalu_12,2)*(d_initvalu_39-eks);
 	I_ks_sl = Fsl*gks_sl*pow(d_initvalu_13,2)*(d_initvalu_39-eks);
 	I_ks = I_ks_junc+I_ks_sl;
@@ -744,16 +750,16 @@ __device__ void kernel_ecc_2(	fp timeinst,
 	tauxtos = 9/(1+exp((d_initvalu_39+3.0)/15))+0.5;
 	tauytos = 3e3/(1+exp((d_initvalu_39+60.0)/10))+30;
 	taurtos = 2800/(1+exp((d_initvalu_39+60.0)/10))+220; 
-	d_finavalu[offset_8] = (xtoss-d_initvalu_8)/tauxtos;
-	d_finavalu[offset_9] = (ytoss-d_initvalu_9)/tauytos;
-	d_finavalu[offset_40]= (rtoss-d_initvalu_40)/taurtos; 
+	d_finavalu_index(offset_8) = (xtoss-d_initvalu_8)/tauxtos;
+	d_finavalu_index(offset_9) = (ytoss-d_initvalu_9)/tauytos;
+	d_finavalu_index(offset_40)= (rtoss-d_initvalu_40)/taurtos; 
 	I_tos = GtoSlow*d_initvalu_8*(d_initvalu_9+0.5*d_initvalu_40)*(d_initvalu_39-ek);									// [uA/uF]
 
 	//
 	tauxtof = 3.5*exp(-d_initvalu_39*d_initvalu_39/30/30)+1.5;
 	tauytof = 20.0/(1+exp((d_initvalu_39+33.5)/10))+20.0;
-	d_finavalu[offset_10] = (xtoss-d_initvalu_10)/tauxtof;
-	d_finavalu[offset_11] = (ytoss-d_initvalu_11)/tauytof;
+	d_finavalu_index(offset_10) = (xtoss-d_initvalu_10)/tauxtof;
+	d_finavalu_index(offset_11) = (ytoss-d_initvalu_11)/tauytof;
 	I_tof = GtoFast*d_initvalu_10*d_initvalu_11*(d_initvalu_39-ek);
 	I_to = I_tos + I_tof;
 
@@ -774,10 +780,10 @@ __device__ void kernel_ecc_2(	fp timeinst,
 	taud = dss*(1-exp(-(d_initvalu_39+14.5)/6.0))/(0.035*(d_initvalu_39+14.5));
 	fss = 1/(1+exp((d_initvalu_39+35.06)/3.6))+0.6/(1+exp((50-d_initvalu_39)/20));
 	tauf = 1/(0.0197*exp(-pow(0.0337*(d_initvalu_39+14.5),2))+0.02);
-	d_finavalu[offset_4] = (dss-d_initvalu_4)/taud;
-	d_finavalu[offset_5] = (fss-d_initvalu_5)/tauf;
-	d_finavalu[offset_6] = 1.7*d_initvalu_36*(1-d_initvalu_6)-11.9e-3*d_initvalu_6;											// fCa_junc  
-	d_finavalu[offset_7] = 1.7*d_initvalu_37*(1-d_initvalu_7)-11.9e-3*d_initvalu_7;											// fCa_sl
+	d_finavalu_index(offset_4) = (dss-d_initvalu_4)/taud;
+	d_finavalu_index(offset_5) = (fss-d_initvalu_5)/tauf;
+	d_finavalu_index(offset_6) = 1.7*d_initvalu_36*(1-d_initvalu_6)-11.9e-3*d_initvalu_6;											// fCa_junc  
+	d_finavalu_index(offset_7) = 1.7*d_initvalu_37*(1-d_initvalu_7)-11.9e-3*d_initvalu_7;											// fCa_sl
 
 	//
 	ibarca_j = pCa*4*(d_initvalu_39*Frdy*FoRT) * (0.341*d_initvalu_36*exp(2*d_initvalu_39*FoRT)-0.341*Cao) /(exp(2*d_initvalu_39*FoRT)-1);
@@ -788,7 +794,7 @@ __device__ void kernel_ecc_2(	fp timeinst,
 	I_Ca_junc = (Fjunc_CaL*ibarca_j*d_initvalu_4*d_initvalu_5*(1-d_initvalu_6)*pow(Q10CaL,Qpow))*0.45;
 	I_Ca_sl = (Fsl_CaL*ibarca_sl*d_initvalu_4*d_initvalu_5*(1-d_initvalu_7)*pow(Q10CaL,Qpow))*0.45;
 	I_Ca = I_Ca_junc+I_Ca_sl;
-	d_finavalu[offset_43]=-I_Ca*Cmem/(Vmyo*2*Frdy)*1e3;
+	d_finavalu_index(offset_43)=-I_Ca*Cmem/(Vmyo*2*Frdy)*1e3;
 	I_CaK = (ibark*d_initvalu_4*d_initvalu_5*(Fjunc_CaL*(1-d_initvalu_6)+Fsl_CaL*(1-d_initvalu_7))*pow(Q10CaL,Qpow))*0.45;
 	I_CaNa_junc = (Fjunc_CaL*ibarna_j*d_initvalu_4*d_initvalu_5*(1-d_initvalu_6)*pow(Q10CaL,Qpow))*0.45;
 	I_CaNa_sl = (Fsl_CaL*ibarna_sl*d_initvalu_4*d_initvalu_5*(1-d_initvalu_7)*pow(Q10CaL,Qpow))*0.45;
@@ -807,19 +813,19 @@ __device__ void kernel_ecc_2(	fp timeinst,
 	I_ncx_junc = Fjunc*IbarNCX*pow(Q10NCX,Qpow)*Ka_junc*(s1_junc-s2_junc)/s3_junc;
 	I_ncx_sl = Fsl*IbarNCX*pow(Q10NCX,Qpow)*Ka_sl*(s1_sl-s2_sl)/s3_sl;
 	I_ncx = I_ncx_junc+I_ncx_sl;
-	d_finavalu[offset_45]=2*I_ncx*Cmem/(Vmyo*2*Frdy)*1e3;
+	d_finavalu_index(offset_45)=2*I_ncx*Cmem/(Vmyo*2*Frdy)*1e3;
 
 	// I_pca: Sarcolemmal Ca Pump Current
 	I_pca_junc = Fjunc*pow(Q10SLCaP,Qpow)*IbarSLCaP*pow(d_initvalu_36,fp(1.6))/(pow(KmPCa,fp(1.6))+pow(d_initvalu_36,fp(1.6)));
 	I_pca_sl = Fsl*pow(Q10SLCaP,Qpow)*IbarSLCaP*pow(d_initvalu_37,fp(1.6))/(pow(KmPCa,fp(1.6))+pow(d_initvalu_37,fp(1.6)));
 	I_pca = I_pca_junc+I_pca_sl;
-	d_finavalu[offset_44]=-I_pca*Cmem/(Vmyo*2*Frdy)*1e3;
+	d_finavalu_index(offset_44)=-I_pca*Cmem/(Vmyo*2*Frdy)*1e3;
 
 	// I_cabk: Ca Background Current
 	I_cabk_junc = Fjunc*GCaB*(d_initvalu_39-eca_junc);
 	I_cabk_sl = Fsl*GCaB*(d_initvalu_39-eca_sl);
 	I_cabk = I_cabk_junc+I_cabk_sl;
-	d_finavalu[offset_46]=-I_cabk*Cmem/(Vmyo*2*Frdy)*1e3;
+	d_finavalu_index(offset_46)=-I_cabk*Cmem/(Vmyo*2*Frdy)*1e3;
 	
 	// SR fluxes: Calcium Release, SR Ca pump, SR Ca leak														
 	MaxSR = 15; 
@@ -828,61 +834,61 @@ __device__ void kernel_ecc_2(	fp timeinst,
 	koSRCa = koCa/kCaSR;
 	kiSRCa = kiCa*kCaSR;
 	RI = 1-d_initvalu_14-d_initvalu_15-d_initvalu_16;
-	d_finavalu[offset_14] = (kim*RI-kiSRCa*d_initvalu_36*d_initvalu_14)-(koSRCa*pow(d_initvalu_36,2)*d_initvalu_14-kom*d_initvalu_15);			// R
-	d_finavalu[offset_15] = (koSRCa*pow(d_initvalu_36,2)*d_initvalu_14-kom*d_initvalu_15)-(kiSRCa*d_initvalu_36*d_initvalu_15-kim*d_initvalu_16);			// O
-	d_finavalu[offset_16] = (kiSRCa*d_initvalu_36*d_initvalu_15-kim*d_initvalu_16)-(kom*d_initvalu_16-koSRCa*pow(d_initvalu_36,2)*RI);			// I
+	d_finavalu_index(offset_14) = (kim*RI-kiSRCa*d_initvalu_36*d_initvalu_14)-(koSRCa*pow(d_initvalu_36,2)*d_initvalu_14-kom*d_initvalu_15);			// R
+	d_finavalu_index(offset_15) = (koSRCa*pow(d_initvalu_36,2)*d_initvalu_14-kom*d_initvalu_15)-(kiSRCa*d_initvalu_36*d_initvalu_15-kim*d_initvalu_16);			// O
+	d_finavalu_index(offset_16) = (kiSRCa*d_initvalu_36*d_initvalu_15-kim*d_initvalu_16)-(kom*d_initvalu_16-koSRCa*pow(d_initvalu_36,2)*RI);			// I
 	J_SRCarel = ks*d_initvalu_15*(d_initvalu_31-d_initvalu_36);													// [mM/ms]
 	J_serca = pow(Q10SRCaP,Qpow)*Vmax_SRCaP*(pow((d_initvalu_38/Kmf),hillSRCaP)-pow((d_initvalu_31/Kmr),hillSRCaP))
 										 /(1+pow((d_initvalu_38/Kmf),hillSRCaP)+pow((d_initvalu_31/Kmr),hillSRCaP));
 	J_SRleak = 5.348e-6*(d_initvalu_31-d_initvalu_36);													//   [mM/ms]
 
 	// Sodium and Calcium Buffering														
-	d_finavalu[offset_17] = kon_na*d_initvalu_32*(Bmax_Naj-d_initvalu_17)-koff_na*d_initvalu_17;								// NaBj      [mM/ms]
-	d_finavalu[offset_18] = kon_na*d_initvalu_33*(Bmax_Nasl-d_initvalu_18)-koff_na*d_initvalu_18;							// NaBsl     [mM/ms]
+	d_finavalu_index(offset_17) = kon_na*d_initvalu_32*(Bmax_Naj-d_initvalu_17)-koff_na*d_initvalu_17;								// NaBj      [mM/ms]
+	d_finavalu_index(offset_18) = kon_na*d_initvalu_33*(Bmax_Nasl-d_initvalu_18)-koff_na*d_initvalu_18;							// NaBsl     [mM/ms]
 
 	// Cytosolic Ca Buffers
-	d_finavalu[offset_19] = kon_tncl*d_initvalu_38*(Bmax_TnClow-d_initvalu_19)-koff_tncl*d_initvalu_19;						// TnCL      [mM/ms]
-	d_finavalu[offset_20] = kon_tnchca*d_initvalu_38*(Bmax_TnChigh-d_initvalu_20-d_initvalu_21)-koff_tnchca*d_initvalu_20;			// TnCHc     [mM/ms]
-	d_finavalu[offset_21] = kon_tnchmg*Mgi*(Bmax_TnChigh-d_initvalu_20-d_initvalu_21)-koff_tnchmg*d_initvalu_21;				// TnCHm     [mM/ms]
-	d_finavalu[offset_22] = 0;																		// CaM       [mM/ms]
-	d_finavalu[offset_23] = kon_myoca*d_initvalu_38*(Bmax_myosin-d_initvalu_23-d_initvalu_24)-koff_myoca*d_initvalu_23;				// Myosin_ca [mM/ms]
-	d_finavalu[offset_24] = kon_myomg*Mgi*(Bmax_myosin-d_initvalu_23-d_initvalu_24)-koff_myomg*d_initvalu_24;				// Myosin_mg [mM/ms]
-	d_finavalu[offset_25] = kon_sr*d_initvalu_38*(Bmax_SR-d_initvalu_25)-koff_sr*d_initvalu_25;								// SRB       [mM/ms]
-	J_CaB_cytosol = d_finavalu[offset_19] + d_finavalu[offset_20] + d_finavalu[offset_21] + d_finavalu[offset_22] + d_finavalu[offset_23] + d_finavalu[offset_24] + d_finavalu[offset_25];
+	d_finavalu_index(offset_19) = kon_tncl*d_initvalu_38*(Bmax_TnClow-d_initvalu_19)-koff_tncl*d_initvalu_19;						// TnCL      [mM/ms]
+	d_finavalu_index(offset_20) = kon_tnchca*d_initvalu_38*(Bmax_TnChigh-d_initvalu_20-d_initvalu_21)-koff_tnchca*d_initvalu_20;			// TnCHc     [mM/ms]
+	d_finavalu_index(offset_21) = kon_tnchmg*Mgi*(Bmax_TnChigh-d_initvalu_20-d_initvalu_21)-koff_tnchmg*d_initvalu_21;				// TnCHm     [mM/ms]
+	d_finavalu_index(offset_22) = 0;																		// CaM       [mM/ms]
+	d_finavalu_index(offset_23) = kon_myoca*d_initvalu_38*(Bmax_myosin-d_initvalu_23-d_initvalu_24)-koff_myoca*d_initvalu_23;				// Myosin_ca [mM/ms]
+	d_finavalu_index(offset_24) = kon_myomg*Mgi*(Bmax_myosin-d_initvalu_23-d_initvalu_24)-koff_myomg*d_initvalu_24;				// Myosin_mg [mM/ms]
+	d_finavalu_index(offset_25) = kon_sr*d_initvalu_38*(Bmax_SR-d_initvalu_25)-koff_sr*d_initvalu_25;								// SRB       [mM/ms]
+	J_CaB_cytosol = d_finavalu_index(offset_19) + d_finavalu_index(offset_20) + d_finavalu_index(offset_21) + d_finavalu_index(offset_22) + d_finavalu_index(offset_23) + d_finavalu_index(offset_24) + d_finavalu_index(offset_25);
 
 	// Junctional and SL Ca Buffers
-	d_finavalu[offset_26] = kon_sll*d_initvalu_36*(Bmax_SLlowj-d_initvalu_26)-koff_sll*d_initvalu_26;						// SLLj      [mM/ms]
-	d_finavalu[offset_27] = kon_sll*d_initvalu_37*(Bmax_SLlowsl-d_initvalu_27)-koff_sll*d_initvalu_27;						// SLLsl     [mM/ms]
-	d_finavalu[offset_28] = kon_slh*d_initvalu_36*(Bmax_SLhighj-d_initvalu_28)-koff_slh*d_initvalu_28;						// SLHj      [mM/ms]
-	d_finavalu[offset_29] = kon_slh*d_initvalu_37*(Bmax_SLhighsl-d_initvalu_29)-koff_slh*d_initvalu_29;						// SLHsl     [mM/ms]
-	J_CaB_junction = d_finavalu[offset_26]+d_finavalu[offset_28];
-	J_CaB_sl = d_finavalu[offset_27]+d_finavalu[offset_29];
+	d_finavalu_index(offset_26) = kon_sll*d_initvalu_36*(Bmax_SLlowj-d_initvalu_26)-koff_sll*d_initvalu_26;						// SLLj      [mM/ms]
+	d_finavalu_index(offset_27) = kon_sll*d_initvalu_37*(Bmax_SLlowsl-d_initvalu_27)-koff_sll*d_initvalu_27;						// SLLsl     [mM/ms]
+	d_finavalu_index(offset_28) = kon_slh*d_initvalu_36*(Bmax_SLhighj-d_initvalu_28)-koff_slh*d_initvalu_28;						// SLHj      [mM/ms]
+	d_finavalu_index(offset_29) = kon_slh*d_initvalu_37*(Bmax_SLhighsl-d_initvalu_29)-koff_slh*d_initvalu_29;						// SLHsl     [mM/ms]
+	J_CaB_junction = d_finavalu_index(offset_26)+d_finavalu_index(offset_28);
+	J_CaB_sl = d_finavalu_index(offset_27)+d_finavalu_index(offset_29);
 
 	// SR Ca Concentrations
-	d_finavalu[offset_30] = kon_csqn*d_initvalu_31*(Bmax_Csqn-d_initvalu_30)-koff_csqn*d_initvalu_30;						// Csqn      [mM/ms]
+	d_finavalu_index(offset_30) = kon_csqn*d_initvalu_31*(Bmax_Csqn-d_initvalu_30)-koff_csqn*d_initvalu_30;						// Csqn      [mM/ms]
 	oneovervsr = 1/Vsr;
-	d_finavalu[offset_31] = J_serca*Vmyo*oneovervsr-(J_SRleak*Vmyo*oneovervsr+J_SRCarel)-d_finavalu[offset_30];   // Ca_sr     [mM/ms] %Ratio 3 leak current
+	d_finavalu_index(offset_31) = J_serca*Vmyo*oneovervsr-(J_SRleak*Vmyo*oneovervsr+J_SRCarel)-d_finavalu_index(offset_30);   // Ca_sr     [mM/ms] %Ratio 3 leak current
 
 	// Sodium Concentrations
 	I_Na_tot_junc = I_Na_junc+I_nabk_junc+3*I_ncx_junc+3*I_nak_junc+I_CaNa_junc;		// [uA/uF]
 	I_Na_tot_sl = I_Na_sl+I_nabk_sl+3*I_ncx_sl+3*I_nak_sl+I_CaNa_sl;					// [uA/uF]
-	d_finavalu[offset_32] = -I_Na_tot_junc*Cmem/(Vjunc*Frdy)+J_na_juncsl/Vjunc*(d_initvalu_33-d_initvalu_32)-d_finavalu[offset_17];
+	d_finavalu_index(offset_32) = -I_Na_tot_junc*Cmem/(Vjunc*Frdy)+J_na_juncsl/Vjunc*(d_initvalu_33-d_initvalu_32)-d_finavalu_index(offset_17);
 	oneovervsl = 1/Vsl;
-	d_finavalu[offset_33] = -I_Na_tot_sl*Cmem*oneovervsl/Frdy+J_na_juncsl*oneovervsl*(d_initvalu_32-d_initvalu_33)+J_na_slmyo*oneovervsl*(d_initvalu_34-d_initvalu_33)-d_finavalu[offset_18];
-	d_finavalu[offset_34] = J_na_slmyo/Vmyo*(d_initvalu_33-d_initvalu_34);											// [mM/msec] 
+	d_finavalu_index(offset_33) = -I_Na_tot_sl*Cmem*oneovervsl/Frdy+J_na_juncsl*oneovervsl*(d_initvalu_32-d_initvalu_33)+J_na_slmyo*oneovervsl*(d_initvalu_34-d_initvalu_33)-d_finavalu_index(offset_18);
+	d_finavalu_index(offset_34) = J_na_slmyo/Vmyo*(d_initvalu_33-d_initvalu_34);											// [mM/msec] 
 
 	// Potassium Concentration
 	I_K_tot = I_to+I_kr+I_ks+I_ki-2*I_nak+I_CaK+I_kp;									// [uA/uF]
-	d_finavalu[offset_35] = 0;															// [mM/msec]
+	d_finavalu_index(offset_35) = 0;															// [mM/msec]
 
 	// Calcium Concentrations
 	I_Ca_tot_junc = I_Ca_junc+I_cabk_junc+I_pca_junc-2*I_ncx_junc;						// [uA/uF]
 	I_Ca_tot_sl = I_Ca_sl+I_cabk_sl+I_pca_sl-2*I_ncx_sl;								// [uA/uF]
-	d_finavalu[offset_36] = -I_Ca_tot_junc*Cmem/(Vjunc*2*Frdy)+J_ca_juncsl/Vjunc*(d_initvalu_37-d_initvalu_36)
+	d_finavalu_index(offset_36) = -I_Ca_tot_junc*Cmem/(Vjunc*2*Frdy)+J_ca_juncsl/Vjunc*(d_initvalu_37-d_initvalu_36)
 	         - J_CaB_junction+(J_SRCarel)*Vsr/Vjunc+J_SRleak*Vmyo/Vjunc;				// Ca_j
-	d_finavalu[offset_37] = -I_Ca_tot_sl*Cmem/(Vsl*2*Frdy)+J_ca_juncsl/Vsl*(d_initvalu_36-d_initvalu_37)
+	d_finavalu_index(offset_37) = -I_Ca_tot_sl*Cmem/(Vsl*2*Frdy)+J_ca_juncsl/Vsl*(d_initvalu_36-d_initvalu_37)
 	         + J_ca_slmyo/Vsl*(d_initvalu_38-d_initvalu_37)-J_CaB_sl;									// Ca_sl
-	d_finavalu[offset_38] = -J_serca-J_CaB_cytosol +J_ca_slmyo/Vmyo*(d_initvalu_37-d_initvalu_38);
+	d_finavalu_index(offset_38) = -J_serca-J_CaB_cytosol +J_ca_slmyo/Vmyo*(d_initvalu_37-d_initvalu_38);
 	// junc_sl=J_ca_juncsl/Vsl*(d_initvalu_36-d_initvalu_37);
 	// sl_junc=J_ca_juncsl/Vjunc*(d_initvalu_37-d_initvalu_36);
 	// sl_myo=J_ca_slmyo/Vsl*(d_initvalu_38-d_initvalu_37);
@@ -921,10 +927,10 @@ __device__ void kernel_ecc_2(	fp timeinst,
 	I_Cl_tot = I_ClCa+I_Clbk;															// [uA/uF]
 	I_Ca_tot = I_Ca_tot_junc+I_Ca_tot_sl;
 	I_tot = I_Na_tot+I_Cl_tot+I_Ca_tot+I_K_tot;
-	d_finavalu[offset_39] = -(I_tot-I_app);
+	d_finavalu_index(offset_39) = -(I_tot-I_app);
 
 	// Set unused output values to 0 (MATLAB does it by default)
-	d_finavalu[offset_41] = 0;
-	d_finavalu[offset_42] = 0;
+	d_finavalu_index(offset_41) = 0;
+	d_finavalu_index(offset_42) = 0;
 
 }
