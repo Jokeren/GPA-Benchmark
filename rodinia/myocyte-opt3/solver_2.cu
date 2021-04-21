@@ -86,7 +86,7 @@ __global__ void solver_2(	int workload,
 	params_pointer = tid*PARAMETERS;
 	initvalu_temp_pointer = tid*EQUATIONS;
 	//finavalu_temp_pointer = tid*13*EQUATIONS;
-	finavalu_temp_pointer = 0;
+	finavalu_temp_pointer = bx*13*32*EQUATIONS;
 	com_pointer = tid*3;
 
 	// solver parameters

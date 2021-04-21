@@ -2,7 +2,7 @@
 //	MAIN FUNCTION														
 //=====================================================================
 
-#define d_finavalu_index(x) d_finavalu[128 * (x) + tid]
+#define d_finavalu_index(x) d_finavalu[32 * (x) + tx]
 
 __device__ void kernel_ecc_2(	fp timeinst,
 													fp* d_initvalu,

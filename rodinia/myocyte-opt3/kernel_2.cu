@@ -129,11 +129,11 @@ __device__ void kernel_2(	int timeinst,
 	int tid = bx*NUMBER_THREADS+tx;
 
 	for(i=0; i<EQUATIONS; i++){
-		if (isnan(finavalu[128 * i + tid]) == 1){ 
-			finavalu[128 * i + tid] = 0.0001;												// for NAN set rate of change to 0.0001
+		if (isnan(finavalu[32 * i + tx]) == 1){ 
+			finavalu[32 * i + tx] = 0.0001;												// for NAN set rate of change to 0.0001
 		}
-		else if (isinf(finavalu[128 * i + tid]) == 1){ 
-			finavalu[128 * i + tid] = 0.0001;												// for INF set rate of change to 0.0001
+		else if (isinf(finavalu[32 * i + tx]) == 1){ 
+			finavalu[32 * i + tx] = 0.0001;												// for INF set rate of change to 0.0001
 		}
 	}
 
